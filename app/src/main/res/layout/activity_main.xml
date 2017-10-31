@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e6e3e3"
+    android:orientation="horizontal">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_mian"
+        android:layout_width="200dp"
+        android:layout_height="match_parent" />
+
+    <com.gioppl.signature.DoodleView
+        android:id="@+id/dView_main"
+        android:layout_width="600dp"
+        android:layout_height="600dp"
+        android:layout_gravity="center"
+        android:background="#ffffff" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="50dp">
+        <ImageView
+            android:id="@+id/im_main_black"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/black"/>
+        <ImageView
+            android:id="@+id/im_main_yellow"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/yellow"/>
+        <ImageView
+            android:id="@+id/im_main_red"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/red"/>
+        <ImageView
+            android:id="@+id/im_main_purple"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/purple"/>
+        <ImageView
+            android:id="@+id/im_main_blue"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/blue"/>
+        <ImageView
+            android:id="@+id/im_main_green"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/green"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="50dp">
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="30dp"
+            android:onClick="save"
+            android:text="保存图片"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="30dp"
+            android:onClick="clear"
+            android:text="清除面板"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btn_upload"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:onClick="upload"
+            android:text="上传文件"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+</LinearLayout>
