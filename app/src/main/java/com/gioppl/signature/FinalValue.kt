@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 
 /**
+ * 全局类方法，包括提示成功，提示错误，还有全局变量
  * Created by GIOPPL on 2017/10/28.
  */
 class FinalValue {

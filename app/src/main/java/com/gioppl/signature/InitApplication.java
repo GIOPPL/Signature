@@ -12,7 +12,7 @@ public class InitApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fresco.initialize(this);
+        Fresco.initialize(this);//为了Facebook的图片库Fresco的初始化
 
     }
     /**

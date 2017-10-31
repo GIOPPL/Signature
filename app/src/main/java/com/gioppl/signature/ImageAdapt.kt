@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 
 /**
+ * 左侧画廊的适配器
  * Created by GIOPPL on 2017/10/28.
  */
 class ImageAdapt(private var mContext:Context,private var mList:ArrayList<String>,var adaptOption: AdaptOption) : RecyclerView.Adapter<ImageAdapt.ImageViewHolder>() {

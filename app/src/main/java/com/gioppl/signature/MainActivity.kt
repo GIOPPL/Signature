@@ -15,11 +15,12 @@ import android.widget.ImageView
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
-    var dView: DoodleView? = null
-    var mRV: RecyclerView? = null
-    var mAdapt: ImageAdapt? = null
-    var imagePath: String? = null
+    var dView: DoodleView? = null//画板
+    var mRV: RecyclerView? = null//画廊
+    var mAdapt: ImageAdapt? = null//适配器
+    var imagePath: String? = null//用于保存的图片保存成功的回调值
 
+    //画笔颜色
     var paint_blue: ImageView? = null
     var paint_green: ImageView? = null
     var paint_red: ImageView? = null
@@ -38,12 +39,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * 初始化一般控件
+     */
     private fun initView() {
         dView = findViewById(R.id.dView_main) as DoodleView?
         mRV = findViewById(R.id.rv_mian) as RecyclerView?
         initPaint()
     }
 
+    /**
+     * 初始化画笔，用于画笔调色
+     */
     private fun initPaint() {
         paint_black = findViewById(R.id.im_main_black) as ImageView?
         paint_blue = findViewById(R.id.im_main_blue) as ImageView?
@@ -51,11 +58,9 @@ class MainActivity : AppCompatActivity() {
         paint_yellow = findViewById(R.id.im_main_yellow) as ImageView?
         paint_purple = findViewById(R.id.im_main_purple) as ImageView?
         paint_green = findViewById(R.id.im_main_green) as ImageView?
-
-        paint_black!!.setOnClickListener {
-            dView!!.paintColorSet(Color.rgb(43, 43, 43))
-            imageScale(paint_black)
-        }
+        imageScale(paint_black)
+        paint_black!!.setOnClickListener {dView!!.paintColorSet(Color.rgb(43, 43, 43))
+            imageScale(paint_black)}
         paint_blue!!.setOnClickListener { dView!!.paintColorSet(Color.rgb(49, 96, 242))
             imageScale(paint_blue)}
         paint_red!!.setOnClickListener { dView!!.paintColorSet(Color.rgb(250, 33, 33))
@@ -68,6 +73,9 @@ class MainActivity : AppCompatActivity() {
             imageScale(paint_green)}
     }
 
+    /**
+     * 放大缩小图片，用于在点击画笔的时候，缩小该画笔图片，还原其余画笔图片
+     */
     private fun imageScale(view: ImageView?) {
         paint_black!!.scaleX=1.0f
         paint_black!!.scaleY=1.0f
@@ -91,6 +99,9 @@ class MainActivity : AppCompatActivity() {
         view.scaleY = 0.6f
     }
 
+    /**
+     * 保存图片按钮
+     */
     public fun save(v: View?) {
         dView!!.setDrawingCacheEnabled(true)
         dView!!.buildDrawingCache()  //启用DrawingCache并创建位图
@@ -106,11 +117,16 @@ class MainActivity : AppCompatActivity() {
         dView!!.clearCaves()
     }
 
+    /**
+     * 清除画板按钮
+     */
     public fun clear(v: View?) {
         dView!!.clearCaves()
     }
 
-
+    /**
+     * 设置画廊适配器
+     */
     private fun SetAdaptManager() {
         val layoutManager = LinearLayoutManager(this)
         mRV!!.setLayoutManager(layoutManager)
@@ -135,6 +151,9 @@ class MainActivity : AppCompatActivity() {
         mRV!!.setItemAnimator(DefaultItemAnimator())
     }
 
+    /**
+     * 在APP初始化的时候把以前保存的图片找出来
+     */
     private fun findImage() {
         val rootFile = File(Environment.getExternalStorageDirectory().absolutePath + "/GIOPPL/")
         if (rootFile.exists()) {
@@ -146,6 +165,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 上传图片
+     */
     public fun upload(v: View) {
         dView!!.setDrawingCacheEnabled(true)
         dView!!.buildDrawingCache()  //启用DrawingCache并创建位图
@@ -155,7 +177,13 @@ class MainActivity : AppCompatActivity() {
         if (imagePath != null) {
             FinalValue.successMessage(imagePath + ",")
             Thread(Runnable {
-                UploadUtil.uploadFile(File(imagePath), "http://60.169.65.79:1004/sign/main?method=efort", this)
+                UploadUtil.uploadFile(File(imagePath), "http://60.169.65.79:1004/sign/main?method=efort", this,object : UploadUtil.UpImageSuccessful{
+                    override fun uploadImageSuccessful() {//上传成功的回调方法
+                        FinalValue.toast(this@MainActivity, "上传成功!")
+                        FinalValue.successMessage("上传成功")
+                    }
+
+                })
             }).start()
 
         }

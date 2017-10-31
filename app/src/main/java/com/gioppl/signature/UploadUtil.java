@@ -26,7 +26,7 @@ public class UploadUtil {
      * @param RequestURL  请求的rul
      * @return  返回响应的内容
      */
-    public static String uploadFile(File file, String RequestURL, Context context){
+    public static String uploadFile(File file, String RequestURL, Context context,UpImageSuccessful upImageSuccessful){
         String result = null;
         String  BOUNDARY =  UUID.randomUUID().toString();  //边界标识   随机生成
         String PREFIX = "--" , LINE_END = "\r\n";
@@ -89,7 +89,7 @@ public class UploadUtil {
                         sb1.append((char)ss);
                     }
                     result = sb1.toString();
-                    FinalValue.Companion.toast(context,"上传成功!");
+                    upImageSuccessful.uploadImageSuccessful();
                 }
             }
         } catch (MalformedURLException e) {
@@ -98,5 +98,9 @@ public class UploadUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public interface UpImageSuccessful{
+        void uploadImageSuccessful();
     }
 }

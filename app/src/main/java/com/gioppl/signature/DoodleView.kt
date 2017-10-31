@@ -10,6 +10,7 @@ import android.view.View
 
 
 /**
+ * 自定义画板类
  * Created by GIOPPL on 2017/10/27.
  */
 

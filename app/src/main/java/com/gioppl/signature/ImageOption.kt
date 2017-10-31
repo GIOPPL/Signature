@@ -11,13 +11,15 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 /**
+ * 对图片的一些操作，包括保存图片，删除图片
  * Created by GIOPPL on 2017/10/27.
  */
 
 class ImageOption(bitmap: Bitmap?, mContext: Context, var saveSuccess: SaveImageSuccess) {
+    //下面开始保存图片
     init {
         if (bitmap == null) {
-            Toast.makeText(mContext, "保存图片失败啦,无法下载图片", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, "保存图片失败啦,无法保存图片", Toast.LENGTH_SHORT).show()
         }
         val appDir = File(Environment.getExternalStorageDirectory().absolutePath + "/GIOPPL/")
         if (!appDir.exists()) {
@@ -46,9 +48,11 @@ class ImageOption(bitmap: Bitmap?, mContext: Context, var saveSuccess: SaveImage
             e.printStackTrace()
         }
     }
+    //保存成功的回调接口
     public interface SaveImageSuccess{
         fun success(path:String)
     }
+    //删除图片，静态
     companion object {
         public fun deleteOption(path: String){
             var myDeleteFile=File(path)
