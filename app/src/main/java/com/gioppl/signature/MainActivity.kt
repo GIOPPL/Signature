@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity() {
         paint_green!!.setOnClickListener { dView!!.paintColorSet(Color.rgb(35, 243, 79))
             imageScale(paint_green)}
     }
-
     /**
      * 放大缩小图片，用于在点击画笔的时候，缩小该画笔图片，还原其余画笔图片
      */
