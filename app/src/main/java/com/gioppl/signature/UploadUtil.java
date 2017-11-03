@@ -1,6 +1,9 @@
 package com.gioppl.signature;
 
 import android.content.Context;
+import android.os.Looper;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -20,13 +23,15 @@ public class UploadUtil {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10*1000;   //超时时间
     private static final String CHARSET = "utf-8"; //设置编码
+
     /**
      * android上传文件到服务器
      * @param file  需要上传的文件
      * @param RequestURL  请求的rul
      * @return  返回响应的内容
      */
-    public static String uploadFile(File file, String RequestURL, Context context,UpImageSuccessful upImageSuccessful){
+    public UploadUtil(File file, String RequestURL, Context context, final UpImageSuccessful upImageSuccessful){
+
         String result = null;
         String  BOUNDARY =  UUID.randomUUID().toString();  //边界标识   随机生成
         String PREFIX = "--" , LINE_END = "\r\n";
@@ -88,8 +93,9 @@ public class UploadUtil {
                     while((ss=input.read())!=-1){
                         sb1.append((char)ss);
                     }
-                    result = sb1.toString();
-                    upImageSuccessful.uploadImageSuccessful();
+                    showToast(context,"上传成功");
+                }else {
+                    showToast(context,"上传失败");
                 }
             }
         } catch (MalformedURLException e) {
@@ -97,10 +103,26 @@ public class UploadUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
     }
 
     public interface UpImageSuccessful{
         void uploadImageSuccessful();
+        void uploadImageError();
     }
+    private void showToast(final Context context, final String s){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Looper.prepare();
+                try {
+                    Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
+                }catch (Exception e) {
+                    Log.e("error",e.toString());
+                }
+                Looper.loop();
+            }
+        }.start();
+    }
+
 }

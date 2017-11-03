@@ -5,28 +5,23 @@
     android:background="@mipmap/back1"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="73dp"
-        android:layout_height="73dp"
+    <Button
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:onClick="back"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="30dp"
-        android:src="@mipmap/efort" />
+        android:background="@drawable/btn_back" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="签名录入系统"
+        android:text="EFORT"
         android:textColor="#ffffff"
-        android:textSize="28sp"
+        android:textSize="25sp"
         android:textStyle="bold" />
 
-    <Button
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/btn_set"
-        android:onClick="appSet" />
+
 </RelativeLayout>

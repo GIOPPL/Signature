@@ -33,9 +33,9 @@ class ImageOption(bitmap: Bitmap?, mContext: Context, var saveSuccess: SaveImage
         val hour = t.hour
         val minute = t.minute
 
-        FinalValue.successMessage(year.toString() + "," + month + "," + date + "," + hour + "," + minute)
+//        FinalValue.successMessage(year.toString() + "," + month + "," + date + "," + hour + "," + minute)
         val name = year.toString() + "_" + month + "_" + date + "_" + hour + "_" + minute + "_"+FinalValue.getImageIncrement()
-        val fileName = name + ".png"
+        val fileName = name + ".bmp"
         val file = File(appDir, fileName)
         try {
             val fos = FileOutputStream(file)

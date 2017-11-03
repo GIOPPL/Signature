@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EFEFF4"
+    android:orientation="vertical">
+
+    <include layout="@layout/top_set" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="200dp"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_set_net"
+                    android:onClick="netSet"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="#ffffff"
+                    android:text="网络设置"
+                    android:textColor="#585858" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="#EFEFF4" />
+
+                <Button
+                    android:id="@+id/btn_set_companyIntroduce"
+                    android:onClick="companyIntroduce"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="#ffffff"
+                    android:text="公司介绍"
+                    android:textColor="#585858" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#C5C5CA" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp">
+
+            <include
+                android:id="@+id/la_set_1"
+                layout="@layout/net_setting" />
+
+            <include
+                android:id="@+id/la_set_2"
+                layout="@layout/cop_introduce" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
