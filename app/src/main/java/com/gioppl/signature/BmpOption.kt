@@ -1,8 +1,8 @@
 package com.gioppl.signature
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
+import android.graphics.*
+
+
 
 
 /**
@@ -20,7 +20,8 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
     }
 
     public interface SplitBmpOption {
-        fun SplitSuccess(bitmap: Bitmap)
+        fun ServerBitmap(serverBitmap: Bitmap)
+        fun SaveBitmap(saveBitmap: Bitmap)
     }
 
     private fun weightAndHeight() {
@@ -43,17 +44,31 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
         try {
             val newBmp = Bitmap.createBitmap(bitmap, col_count_left, row_count_left, width!! - col_count_left - 1 - col_count_right, height!! - row_count_left - 1 - row_count_right, null, false)
             drawBitmapToBitmap(newBmp)
+            drawServerBitmap(newBmp)
         }catch (e:Exception){
-
+                FinalValue.errorMessage(e.toString())
         }
     }
     private fun drawBitmapToBitmap(frontBitmap: Bitmap){
-        val bitmap_blank = Bitmap.createBitmap(width!!, height!!,Bitmap.Config.ARGB_8888)
+        val bitmap_blank = Bitmap.createBitmap(width!!, height!!-100,Bitmap.Config.ARGB_8888)
         bitmap_blank.eraseColor(Color.parseColor("#ffffff"))//填充颜色
         val canvas = Canvas(bitmap_blank)
         canvas.drawBitmap(frontBitmap, calculateWidth(frontBitmap.width.toFloat()), calculateHeight(frontBitmap.height.toFloat()), null);
-        splitBmpOption.SplitSuccess(bitmap_blank)
+        splitBmpOption.SaveBitmap(bitmap_blank)
     }
+
+    private fun drawServerBitmap(frontBitmap: Bitmap){
+        val bitmap_blank = Bitmap.createBitmap(width!!, height!!-100,Bitmap.Config.ARGB_8888)
+        bitmap_blank.eraseColor(Color.parseColor("#ffffff"))//填充颜色
+        val canvas = Canvas(bitmap_blank)
+        canvas.drawBitmap(frontBitmap, calculateWidth(frontBitmap.width.toFloat()), calculateHeight(frontBitmap.height.toFloat()), null);
+        val m = Matrix()
+        m.postScale(-1f, 1f);   //镜像水平翻转
+        val new2 = Bitmap.createBitmap(bitmap_blank, 0, 0,width!!, height!!-100, m, true)
+        canvas.drawBitmap(new2, Rect(0, 0, new2.width, new2.height), Rect(0, 0,width!!, height!!-100), null)
+        splitBmpOption.ServerBitmap(new2)
+    }
+
 
     private fun calculateHeight(h:Float)=(height!! - h) /2
     private fun calculateWidth(w:Float)=(width!!-w) /2

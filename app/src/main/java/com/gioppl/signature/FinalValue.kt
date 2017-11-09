@@ -10,13 +10,12 @@ import android.widget.Toast
  */
 class FinalValue {
 
-
     companion object {
         internal var IMAGE_NAME_INCREMENT = 0
         internal var SERVER_ADDRESS="http://192.168.1.104:8080"
         internal var SERVER_PORT="/sign/main?method=efort"
-        internal var SERVER_ROBOT="http://192.168.1.104:8080"
-        internal var ROBOT_PORT="/sign/main?method=efort"
+        internal var SERVER_ROBOT="192.168.1.103"
+        internal var ROBOT_PORT=8088
 
         public fun toast(context: Context, msg: String = context.packageName) {
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()

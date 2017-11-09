@@ -19,7 +19,9 @@ class ImageAdapt(private var mContext:Context,private var mList:ArrayList<String
     override fun onBindViewHolder(holder: ImageViewHolder?, position: Int) {
         holder!!.sim_imageItem!!.setImageURI("file://"+mList[position])
         holder.tv_imageItem!!.text=split(mList[position])
-        holder.im_delete!!.setOnClickListener(View.OnClickListener {adaptOption.deleteImage(mList[position],position) })
+        holder.im_delete!!.setOnClickListener(View.OnClickListener {
+            adaptOption.deleteImage(mList[position],position)
+        })
         holder.sim_imageItem!!.setOnClickListener(View.OnClickListener {adaptOption.loadImage(mList[position],position)})
     }
 
@@ -44,4 +46,5 @@ class ImageAdapt(private var mContext:Context,private var mList:ArrayList<String
         fun deleteImage(path: String,position:Int)
         fun loadImage(path : String,position: Int)
     }
+
 }

@@ -85,11 +85,11 @@
                 <!--android:src="@mipmap/efort" />-->
 
             <LinearLayout
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/btn_save"
@@ -102,7 +102,7 @@
 
                 <View
                     android:layout_width="30dp"
-                    android:layout_height="1dp" />
+                    android:layout_height="30dp" />
 
                 <Button
                     android:id="@+id/btn_clear"
@@ -111,6 +111,19 @@
                     android:background="@drawable/btn"
                     android:onClick="clear"
                     android:text="清除面板"
+                    android:textSize="30sp" />
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
+
+                <Button
+                    android:id="@+id/btn_con"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/btn"
+                    android:onClick="conRobot"
+                    android:text="连接机器人"
                     android:textSize="30sp" />
 
             </LinearLayout>

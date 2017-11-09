@@ -31,6 +31,10 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
     compile 'com.facebook.fresco:fresco:0.12.0'
+    compile ('io.socket:socket.io-client:0.8.3') {
+        exclude group: 'org.json', module: 'json'
+    }
+    compile 'com.github.jianfeng318:MinaSocket:1.0'
 }
 repositories {
     mavenCentral()

@@ -1,7 +1,9 @@
 package com.gioppl.signature;
 
 import android.content.Context;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class UploadUtil {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10*1000;   //超时时间
     private static final String CHARSET = "utf-8"; //设置编码
+    private  UpImageSuccessful upImageSuccessful;
 
     /**
      * android上传文件到服务器
@@ -31,7 +34,7 @@ public class UploadUtil {
      * @return  返回响应的内容
      */
     public UploadUtil(File file, String RequestURL, Context context, final UpImageSuccessful upImageSuccessful){
-
+        this.upImageSuccessful=upImageSuccessful;
         String result = null;
         String  BOUNDARY =  UUID.randomUUID().toString();  //边界标识   随机生成
         String PREFIX = "--" , LINE_END = "\r\n";
@@ -86,6 +89,7 @@ public class UploadUtil {
                  * 当响应成功，获取响应的流
                  */
                 int res = conn.getResponseCode();
+                Message msg=new Message();
                 if(res==200){
                     InputStream input =  conn.getInputStream();
                     StringBuffer sb1= new StringBuffer();
@@ -93,10 +97,15 @@ public class UploadUtil {
                     while((ss=input.read())!=-1){
                         sb1.append((char)ss);
                     }
+                    msg.arg1=0x8;
+                    handler.sendMessage(msg);
                     showToast(context,"上传成功");
                 }else {
                     showToast(context,"上传失败");
+                    msg.arg1=0x9;
+                    handler.sendMessage(msg);
                 }
+
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -125,4 +134,15 @@ public class UploadUtil {
         }.start();
     }
 
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.arg1==0x8){
+                upImageSuccessful.uploadImageSuccessful();
+            }else if(msg.arg1==0x9){
+                upImageSuccessful.uploadImageError();
+            }
+        }
+    };
 }
