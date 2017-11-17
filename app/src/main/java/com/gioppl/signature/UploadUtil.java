@@ -2,10 +2,7 @@ package com.gioppl.signature;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -26,6 +23,16 @@ public class UploadUtil {
     private static final int TIME_OUT = 10*1000;   //超时时间
     private static final String CHARSET = "utf-8"; //设置编码
     private  UpImageSuccessful upImageSuccessful;
+    private Context context;
+
+    public UploadUtil(final File file, final String RequestURL, final Context context, final UpImageSuccessful upImageSuccessful){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                start( file,  RequestURL,  context,   upImageSuccessful);
+            }
+        }).start();
+    }
 
     /**
      * android上传文件到服务器
@@ -33,13 +40,14 @@ public class UploadUtil {
      * @param RequestURL  请求的rul
      * @return  返回响应的内容
      */
-    public UploadUtil(File file, String RequestURL, Context context, final UpImageSuccessful upImageSuccessful){
+    public void start(File file, String RequestURL, Context context, final UpImageSuccessful upImageSuccessful){
+        this.context=context;
         this.upImageSuccessful=upImageSuccessful;
         String result = null;
         String  BOUNDARY =  UUID.randomUUID().toString();  //边界标识   随机生成
         String PREFIX = "--" , LINE_END = "\r\n";
         String CONTENT_TYPE = "multipart/form-data";   //内容类型
-
+        Message msg=new Message();
         try {
             URL url = new URL(RequestURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -89,7 +97,7 @@ public class UploadUtil {
                  * 当响应成功，获取响应的流
                  */
                 int res = conn.getResponseCode();
-                Message msg=new Message();
+
                 if(res==200){
                     InputStream input =  conn.getInputStream();
                     StringBuffer sb1= new StringBuffer();
@@ -99,18 +107,19 @@ public class UploadUtil {
                     }
                     msg.arg1=0x8;
                     handler.sendMessage(msg);
-                    showToast(context,"上传成功");
                 }else {
-                    showToast(context,"上传失败");
+
                     msg.arg1=0x9;
                     handler.sendMessage(msg);
                 }
 
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            msg.arg1=0x9;
+            handler.sendMessage(msg);
         } catch (IOException e) {
-            e.printStackTrace();
+            msg.arg1=0x9;
+            handler.sendMessage(msg);
         }
     }
 
@@ -118,29 +127,17 @@ public class UploadUtil {
         void uploadImageSuccessful();
         void uploadImageError();
     }
-    private void showToast(final Context context, final String s){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Looper.prepare();
-                try {
-                    Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
-                }catch (Exception e) {
-                    Log.e("error",e.toString());
-                }
-                Looper.loop();
-            }
-        }.start();
-    }
+
 
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.arg1==0x8){
+                FinalValue.Companion.toast(context,"上传成功");
                 upImageSuccessful.uploadImageSuccessful();
             }else if(msg.arg1==0x9){
+                FinalValue.Companion.toast(context,"上传失败");
                 upImageSuccessful.uploadImageError();
             }
         }

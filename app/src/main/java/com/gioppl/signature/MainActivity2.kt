@@ -21,15 +21,12 @@ import java.io.File
 import java.io.IOException
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity2 : AppCompatActivity() {
     var dView: DoodleView? = null//画板
     var mRV: RecyclerView? = null//画廊
     var mAdapt: ImageAdapt? = null//适配器
     var imagePath: String? = null//用于保存的图片保存成功的回调值
     var btn_con: Button? = null//连接机器人按钮
-    var b_1000:String?=null
-    var b_0000:String?=null
-    var b_0100:String?=null
 
     private var mList = ArrayList<String>()
 
@@ -42,13 +39,6 @@ class MainActivity : AppCompatActivity() {
         initView()
         SetAdaptManager()
         sendRound()//运行连接程序
-        initMessage()
-    }
-
-    private fun initMessage() {
-        b_0000=FinalValueJava.getB_0000()
-        b_1000=FinalValueJava.getB_1000()
-        b_0100=FinalValueJava.getB_0100()
     }
 
     private fun jurisdictionGet() {
@@ -147,7 +137,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun ServerBitmap(serverBitmap: Bitmap) {
                 //保存上传到服务器的图片
-                ImageOption(serverBitmap, this@MainActivity, object : ImageOption.SaveImageSuccess {
+                ImageOption(serverBitmap, this@MainActivity2, object : ImageOption.SaveImageSuccess {
                     override fun success(path: String) {
                         imagePath = path
                     }
@@ -156,7 +146,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun SaveBitmap(saveBitmap: Bitmap) {
                 //保存画廊里要存的图片
-                ImageOption(saveBitmap, this@MainActivity, object : ImageOption.SaveImageSuccess {
+                ImageOption(saveBitmap, this@MainActivity2, object : ImageOption.SaveImageSuccess {
                     override fun success(path: String) {
                         mList.add(0, path)
                         mAdapt!!.notifyDataSetChanged()
@@ -174,10 +164,10 @@ class MainActivity : AppCompatActivity() {
             FinalValue.successMessage(imagePath + ",")
                 UploadUtil(File(imagePath), FinalValue.SERVER_ADDRESS + FinalValue.SERVER_PORT, this, object : UploadUtil.UpImageSuccessful {
                     override fun uploadImageError() {
-                        FinalValue.toast(this@MainActivity, "上传失败!")
+                        FinalValue.toast(this@MainActivity2, "上传失败!")
                     }
                     override fun uploadImageSuccessful() {//上传成功的回调方法
-                        FinalValue.toast(this@MainActivity, "上传成功!")
+                        FinalValue.toast(this@MainActivity2, "上传成功!")
                         btn_con!!.visibility=View.VISIBLE
                         FinalValue.successMessage("图片上传成功哦！！！！")
                     }
@@ -190,7 +180,7 @@ class MainActivity : AppCompatActivity() {
      * APP设置
      */
     public fun appSet(v: View) {
-        startActivity(Intent(this@MainActivity, Setting::class.java))
+        startActivity(Intent(this@MainActivity2, Setting::class.java))
     }
 
     override fun onDestroy() {
@@ -200,91 +190,66 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     /**
      *  下面为机器人编程
      */
     private var isConnectSuccess = false;//是否连接成功
-//    private var robotSate = true//机器人是否在上料,点击按钮的时候转换，所以初始值为true
+    private var robotSate = true//机器人是否在上料,点击按钮的时候转换，所以初始值为true
     private var bfWriter: BufferedWriter? = null
     private var receive_robot = ""
-//    private var stop_sculpture = true//停止上料,true为可以发送指令，false为不能发送指令，机器已经停止
+    private var stop_sculpture = true//停止上料,true为可以发送指令，false为不能发送指令，机器已经停止
+    private var robot_connection_text = "未连接机器人"
     private var allowSculpture=false
-    private var allowSendMessage=true
-    private var tableStatus=TableStatus.S_1000
 
-
-    //定义平板发送的枚举类
-    private enum class TableStatus{
-        S_1000,S_0000//总共有两中状态，第一发送1000，第二发送0000
-    }
 
     //按钮点击事件
     public fun conRobot(v: View) {
         allowSculpture=true
-        allowSendMessage=true
-        btn_con!!.isClickable=false
-
-//        robotSate=!robotSate
+        robotSate=!robotSate
     }
+
+
 
     //连接TCP
     private fun connect() {
         val su = SocketUtil(this, FinalValue.SERVER_ROBOT, FinalValue.ROBOT_PORT, object : SocketUtil.MessageSocket {
             override fun connectSuccess(bfWriter: BufferedWriter) {
                 isConnectSuccess = true
-                this@MainActivity.bfWriter = bfWriter
-                btnSetText("点击雕刻")
+                this@MainActivity2.bfWriter = bfWriter
+                robot_connection_text = "已连接机器人"
             }
 
             override fun backMessage(message: String?) {
                 FinalValue.successMessage("成功接收到信息")
-                receive_robot = message!!
-                val msg=Message()
-                if(message==b_0000){//说明正在雕刻 00 00 00 00
-                    btn_con!!.isClickable=false
-                    msg.arg1=0xa
-                    tableStatus=TableStatus.S_0000
-                }else if (message==b_0100){//说明雕刻结束 00 10 00 00
-                    btn_con!!.isClickable=true
+                FinalValue.toast(this@MainActivity2, message!!)
+                receive_robot = message
+                robot_connection_text = "正在操作"
+                if(message=="0000"){
+                    stop_sculpture=false
+                    val msg=Message()
                     msg.arg1=0xc
-                    tableStatus=TableStatus.S_1000
-                    allowSculpture=false
-                }else if(message==b_1000){//第一次如果给我返回1000,说明第一次初始化结束  10 00 00 00
-                    btn_con!!.isClickable=true
-                    msg.arg1=0xa
-                    tableStatus=TableStatus.S_0000
+                    handler.sendMessage(msg)
                 }
-
-                handler.sendMessage(msg)
             }
         });
     }
-
 
     //循环发送消息
     fun sendRound() {
         Thread(Runnable {
             while (true) {
-                if (bfWriter!=null&&allowSculpture&&allowSendMessage) {//bfWrite不为空，连接成功，是否可以继续发送指令，是否能发指令（按钮点击之后才发指令）
-                    if(tableStatus==TableStatus.S_1000){//如果是第一次就会触发这个方法，一直到机器人返回0000的时候
-                        sendOption(b_1000!!, bfWriter!!)
-                    }else{
-                        sendOption(b_0000!!, bfWriter!!)
-                    }
-//                        sendOption(b_1000!!, bfWriter!!)
+                if (bfWriter!=null&&isConnectSuccess&&stop_sculpture&&allowSculpture) {//bfWrite不为空，连接成功，是否可以继续发送指令，是否能发指令（按钮点击之后才发指令）
+                    if (robotSate) {//时候已经上料，如果上料再次点击则会停止上料
+                        sendOption("0000", bfWriter!!)//0000为发给机器人停止上料
+                        val msg=Message()
+                        msg.arg1=0xb
+                        handler.sendMessage(msg)
+                    } else {
+                        sendOption("1000", bfWriter!!)
                         val msg=Message()
                         msg.arg1=0xa
                         handler.sendMessage(msg)
+                    }
                 } else {
                     val msg=Message()
                     msg.arg1=0xd
@@ -297,7 +262,7 @@ class MainActivity : AppCompatActivity() {
     //发送操作
     fun sendOption(message: String, bfWriter: BufferedWriter) {
         try {
-            bfWriter.write(message)
+            bfWriter.write(message + "\n")
             bfWriter.flush()
             FinalValue.successMessage("成功发送" + message)
         } catch (e: IOException) {
@@ -316,13 +281,9 @@ class MainActivity : AppCompatActivity() {
             super.handleMessage(msg)
             when(msg.arg1){
                 0xA->btnSetText("正在雕刻")
-//                0xB->btnSetText("已停止雕刻")
-                0xc->{
-                    btnSetText("点击雕刻")
-                    FinalValue.toast(this@MainActivity,"已完成雕刻")
-                }
+                0xB->btnSetText("已停止雕刻")
+                0xc->btnSetText("已完成雕刻")
                 0xd->btnSetText("未连接机器人")
-                0xe->btnSetText("点击雕刻")
             }
         }
     }

@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
         android:orientation="horizontal">
 
         <android.support.v7.widget.RecyclerView
@@ -28,56 +29,13 @@
             android:layout_marginTop="10dp"
             android:background="#ffffff" />
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingLeft="50dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/im_main_black"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/black" />
-
-            <ImageView
-                android:id="@+id/im_main_yellow"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/yellow" />
-
-            <ImageView
-                android:id="@+id/im_main_red"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/red" />
-
-            <ImageView
-                android:id="@+id/im_main_purple"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/purple" />
-
-            <ImageView
-                android:id="@+id/im_main_blue"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/blue" />
-
-            <ImageView
-                android:id="@+id/im_main_green"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/green" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingLeft="50dp">
+            android:weightSum="1">
 
             <!--<ImageView-->
                 <!--android:layout_width="200dp"-->
@@ -86,19 +44,20 @@
 
             <LinearLayout
                 android:layout_marginTop="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="0.02">
 
                 <Button
                     android:id="@+id/btn_save"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_height="60dp"
                     android:background="@drawable/btn"
                     android:onClick="save"
                     android:text="保存图片"
-                    android:textSize="30sp" />
+                    android:textSize="25sp" />
 
                 <View
                     android:layout_width="30dp"
@@ -107,11 +66,11 @@
                 <Button
                     android:id="@+id/btn_clear"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_height="60dp"
                     android:background="@drawable/btn"
                     android:onClick="clear"
                     android:text="清除面板"
-                    android:textSize="30sp" />
+                    android:textSize="25sp" />
 
                 <View
                     android:layout_width="30dp"
@@ -120,11 +79,11 @@
                 <Button
                     android:id="@+id/btn_con"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_height="60dp"
                     android:background="@drawable/btn"
                     android:onClick="conRobot"
-                    android:text="连接机器人"
-                    android:textSize="30sp" />
+                    android:text="未连接"
+                    android:textSize="25sp" />
 
             </LinearLayout>
 

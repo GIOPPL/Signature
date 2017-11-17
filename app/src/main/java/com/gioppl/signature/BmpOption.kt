@@ -57,16 +57,23 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
         splitBmpOption.SaveBitmap(bitmap_blank)
     }
 
+    //画固定尺寸的bitmap
+    private fun drawFixationSizeBitmap(){
+
+
+    }
+
     private fun drawServerBitmap(frontBitmap: Bitmap){
+        val final_bitmap=frontBitmap//用于不传镜像文件
         val bitmap_blank = Bitmap.createBitmap(width!!, height!!-100,Bitmap.Config.ARGB_8888)
         bitmap_blank.eraseColor(Color.parseColor("#ffffff"))//填充颜色
         val canvas = Canvas(bitmap_blank)
         canvas.drawBitmap(frontBitmap, calculateWidth(frontBitmap.width.toFloat()), calculateHeight(frontBitmap.height.toFloat()), null);
         val m = Matrix()
         m.postScale(-1f, 1f);   //镜像水平翻转
-        val new2 = Bitmap.createBitmap(bitmap_blank, 0, 0,width!!, height!!-100, m, true)
+        val new2 = Bitmap.createBitmap(bitmap_blank, 0, 0,width!!, height!!-100, m, true)//这个new2就是镜像文件
         canvas.drawBitmap(new2, Rect(0, 0, new2.width, new2.height), Rect(0, 0,width!!, height!!-100), null)
-        splitBmpOption.ServerBitmap(new2)
+        splitBmpOption.ServerBitmap(final_bitmap)
     }
 
 

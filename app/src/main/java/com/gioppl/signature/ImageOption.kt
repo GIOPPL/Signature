@@ -8,9 +8,6 @@ import android.widget.Toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-
-
-
 /**
  * 对图片的一些操作，包括保存图片，删除图片
  * Created by GIOPPL on 2017/10/27.
@@ -19,7 +16,6 @@ import java.io.IOException
 class ImageOption(bitmap: Bitmap?, mContext: Context, var saveSuccess: SaveImageSuccess,var isServer:Boolean) {
     //下面开始保存图片
     init {
-
         if (bitmap == null) {
             Toast.makeText(mContext, "保存图片失败啦,无法保存图片", Toast.LENGTH_SHORT).show()
         }
@@ -40,10 +36,11 @@ class ImageOption(bitmap: Bitmap?, mContext: Context, var saveSuccess: SaveImage
         val minute = t.minute
 
         val name = year.toString() + "_" + month + "_" + date + "_" + hour + "_" + minute + "_"+FinalValue.getImageIncrement()
-        val fileName = name + ".jpg"
+        var fileName = name + ".bmp"
 
         var file:File?=null
         if (isServer){
+            fileName="serve.bmp"
             file = File(appDir2, fileName)
         }else{
             file = File(appDir, fileName)
@@ -56,7 +53,8 @@ class ImageOption(bitmap: Bitmap?, mContext: Context, var saveSuccess: SaveImage
             fos.flush()
             fos.close()
             if (isServer){
-                saveSuccess.success(Environment.getExternalStorageDirectory().absolutePath + "/GIOPPL/Server/"+ fileName)
+//                saveSuccess.success(Environment.getExternalStorageDirectory().absolutePath + "/GIOPPL/Server/"+ fileName)
+                saveSuccess.success(Environment.getExternalStorageDirectory().absolutePath + "/GIOPPL/Server/"+ "serve.bmp")
             }else{
                 saveSuccess.success(Environment.getExternalStorageDirectory().absolutePath + "/GIOPPL/"+ fileName)
             }
