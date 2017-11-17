@@ -5,6 +5,10 @@ import android.graphics.*
 
 
 
+
+
+
+
 /**
  * Created by GIOPPL on 2017/11/1.
  */
@@ -41,10 +45,12 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
         val col_count_left = ArrayOption.split_col_left(b)//左列需要减的数量
         val row_count_right = ArrayOption.split_row_right(b)//右列需要减的数量
         val col_count_right = ArrayOption.split_col_right(b)//右列需要减的数量
+
         try {
             val newBmp = Bitmap.createBitmap(bitmap, col_count_left, row_count_left, width!! - col_count_left - 1 - col_count_right, height!! - row_count_left - 1 - row_count_right, null, false)
-            drawBitmapToBitmap(newBmp)
-            drawServerBitmap(newBmp)
+            drawFixationSizeBitmap(newBmp,0.8f,0.8f)
+//            drawBitmapToBitmap(newBmp)
+//            drawServerBitmap(newBmp)
         }catch (e:Exception){
                 FinalValue.errorMessage(e.toString())
         }
@@ -58,9 +64,11 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
     }
 
     //画固定尺寸的bitmap
-    private fun drawFixationSizeBitmap(){
-
-
+    private fun drawFixationSizeBitmap(bgImage: Bitmap,newWidth:Float,newHeight:Float){
+        val matrix = Matrix()
+        matrix.postScale(newWidth, newHeight) //长和宽放大缩小的比例
+        val resizeBmp = Bitmap.createBitmap(bgImage, 0, 0, bgImage.width, bgImage.height, matrix, true)
+        splitBmpOption.SaveBitmap(resizeBmp)
     }
 
     private fun drawServerBitmap(frontBitmap: Bitmap){
