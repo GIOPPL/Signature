@@ -37,10 +37,10 @@
 
                 <Button
                     android:id="@+id/btn_set_companyIntroduce"
-                    android:onClick="companyIntroduce"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:background="#ffffff"
+                    android:onClick="companyIntroduce"
                     android:text="公司介绍"
                     android:textColor="#585858" />
             </LinearLayout>

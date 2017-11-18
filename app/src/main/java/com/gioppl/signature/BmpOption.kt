@@ -9,6 +9,8 @@ import android.graphics.*
 
 
 
+
+
 /**
  * Created by GIOPPL on 2017/11/1.
  */
@@ -48,8 +50,8 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
 
         try {
             val newBmp = Bitmap.createBitmap(bitmap, col_count_left, row_count_left, width!! - col_count_left - 1 - col_count_right, height!! - row_count_left - 1 - row_count_right, null, false)
-            drawFixationSizeBitmap(newBmp,0.8f,0.8f)
-//            drawBitmapToBitmap(newBmp)
+            drawFixationSizeBitmap(newBmp,FinalValue.BITMAP_SIZE)
+            drawBitmapToBitmap(newBmp)
 //            drawServerBitmap(newBmp)
         }catch (e:Exception){
                 FinalValue.errorMessage(e.toString())
@@ -64,11 +66,26 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
     }
 
     //画固定尺寸的bitmap
-    private fun drawFixationSizeBitmap(bgImage: Bitmap,newWidth:Float,newHeight:Float){
-        val matrix = Matrix()
-        matrix.postScale(newWidth, newHeight) //长和宽放大缩小的比例
-        val resizeBmp = Bitmap.createBitmap(bgImage, 0, 0, bgImage.width, bgImage.height, matrix, true)
-        splitBmpOption.SaveBitmap(resizeBmp)
+    private fun drawFixationSizeBitmap(bgImage: Bitmap,newWidth:Int){
+//        val matrix = Matrix()
+//        val ratio=newWidth/bgImage.width
+//        FinalValue.successMessage("缩放的比例是$ratio，原来的长宽是"+bgImage.width+","+ bgImage.height)
+//        matrix.postScale(ratio, ratio) //长和宽放大缩小的比例
+//        val resizeBmp = Bitmap.createBitmap(bgImage, 0, 0, bgImage.width, bgImage.height, matrix, true)
+//        FinalValue.successMessage("现在的图片大小是"+resizeBmp.width+","+resizeBmp.height)
+
+//        val matrix = Matrix()
+//        matrix.postScale(0.2f, 0.2f)
+//        val temp = Bitmap.createBitmap(bgImage, 0, 0, bgImage.width, bgImage.height, matrix, true)
+        var newBmp=bgImage;
+        while (newBmp.width >=newWidth){
+            val matrix = Matrix()
+            matrix.postScale(0.9f, 0.9f)
+            newBmp = Bitmap.createBitmap(newBmp, 0, 0, newBmp.width, newBmp.height, matrix, true)
+        }
+
+//        splitBmpOption.SaveBitmap(newBmp)
+        splitBmpOption.ServerBitmap(newBmp)
     }
 
     private fun drawServerBitmap(frontBitmap: Bitmap){

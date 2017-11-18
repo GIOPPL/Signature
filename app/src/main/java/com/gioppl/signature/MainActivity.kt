@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
     var mAdapt: ImageAdapt? = null//适配器
     var imagePath: String? = null//用于保存的图片保存成功的回调值
     var btn_con: Button? = null//连接机器人按钮
-    var b_1000:String?=null
-    var b_0000:String?=null
-    var b_0100:String?=null
+    var b_1000: String? = null
+    var b_0000: String? = null
+    var b_0100: String? = null
 
     private var mList = ArrayList<String>()
 
@@ -46,9 +46,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initMessage() {
-        b_0000=FinalValueJava.getB_0000()
-        b_1000=FinalValueJava.getB_1000()
-        b_0100=FinalValueJava.getB_0100()
+        b_0000 = FinalValueJava.getB_0000()
+        b_1000 = FinalValueJava.getB_1000()
+        b_0100 = FinalValueJava.getB_0100()
     }
 
     private fun jurisdictionGet() {
@@ -172,16 +172,17 @@ class MainActivity : AppCompatActivity() {
         //上传图片
         if (imagePath != null) {
             FinalValue.successMessage(imagePath + ",")
-                UploadUtil(File(imagePath), FinalValue.SERVER_ADDRESS + FinalValue.SERVER_PORT, this, object : UploadUtil.UpImageSuccessful {
-                    override fun uploadImageError() {
-                        FinalValue.toast(this@MainActivity, "上传失败!")
-                    }
-                    override fun uploadImageSuccessful() {//上传成功的回调方法
-                        FinalValue.toast(this@MainActivity, "上传成功!")
-                        btn_con!!.visibility=View.VISIBLE
-                        FinalValue.successMessage("图片上传成功哦！！！！")
-                    }
-                })
+            UploadUtil(File(imagePath), FinalValue.SERVER_ADDRESS + FinalValue.SERVER_PORT, this, object : UploadUtil.UpImageSuccessful {
+                override fun uploadImageError() {
+                    FinalValue.toast(this@MainActivity, "上传失败!")
+                }
+
+                override fun uploadImageSuccessful() {//上传成功的回调方法
+                    FinalValue.toast(this@MainActivity, "上传成功!")
+                    btn_con!!.visibility = View.VISIBLE
+                    FinalValue.successMessage("图片上传成功哦！！！！")
+                }
+            })
         }
 //        ImageOption.deleteServerAllImage()//删除server文件夹全部文件
     }
@@ -200,39 +201,35 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     /**
      *  下面为机器人编程
      */
     private var isConnectSuccess = false;//是否连接成功
-//    private var robotSate = true//机器人是否在上料,点击按钮的时候转换，所以初始值为true
+    //    private var robotSate = true//机器人是否在上料,点击按钮的时候转换，所以初始值为true
     private var bfWriter: BufferedWriter? = null
     private var receive_robot = ""
-//    private var stop_sculpture = true//停止上料,true为可以发送指令，false为不能发送指令，机器已经停止
-    private var allowSculpture=false
-    private var allowSendMessage=true
-    private var tableStatus=TableStatus.S_1000
+    //    private var stop_sculpture = true//停止上料,true为可以发送指令，false为不能发送指令，机器已经停止
+    private var allowSculpture = false
+    private var allowSendMessage = true
+    private var tableStatus = TableStatus.S_1000
+    private var netConnectStatus=BtnStatus.NoNet//按钮连接状态
 
 
     //定义平板发送的枚举类
-    private enum class TableStatus{
-        S_1000,S_0000//总共有两中状态，第一发送1000，第二发送0000
+    private enum class TableStatus {
+        S_1000, S_0000//总共有两中状态，第一发送1000，第二发送0000
+    }
+
+    //定义发送按钮的枚举类
+    private enum class BtnStatus {
+        NoNet, Already, Sculpture
     }
 
     //按钮点击事件
     public fun conRobot(v: View) {
-        allowSculpture=true
-        allowSendMessage=true
-        btn_con!!.isClickable=false
+        allowSculpture = true
+        allowSendMessage = true
+        btn_con!!.isClickable = false
 
 //        robotSate=!robotSate
     }
@@ -244,25 +241,26 @@ class MainActivity : AppCompatActivity() {
                 isConnectSuccess = true
                 this@MainActivity.bfWriter = bfWriter
                 btnSetText("点击雕刻")
+                sendButtonSetBackground(BtnStatus.Already)
             }
 
             override fun backMessage(message: String?) {
                 FinalValue.successMessage("成功接收到信息")
                 receive_robot = message!!
-                val msg=Message()
-                if(message==b_0000){//说明正在雕刻 00 00 00 00
-                    btn_con!!.isClickable=false
-                    msg.arg1=0xa
-                    tableStatus=TableStatus.S_0000
-                }else if (message==b_0100){//说明雕刻结束 00 10 00 00
-                    btn_con!!.isClickable=true
-                    msg.arg1=0xc
-                    tableStatus=TableStatus.S_1000
-                    allowSculpture=false
-                }else if(message==b_1000){//第一次如果给我返回1000,说明第一次初始化结束  10 00 00 00
-                    btn_con!!.isClickable=true
-                    msg.arg1=0xa
-                    tableStatus=TableStatus.S_0000
+                val msg = Message()
+                if (message == b_0000) {//说明正在雕刻 00 00 00 00
+                    btn_con!!.isClickable = false
+                    msg.arg1 = 0xa
+                    tableStatus = TableStatus.S_0000
+                } else if (message == b_0100) {//说明雕刻结束 00 10 00 00
+                    btn_con!!.isClickable = true
+                    msg.arg1 = 0xc
+                    tableStatus = TableStatus.S_1000
+                    allowSculpture = false
+                } else if (message == b_1000) {//第一次如果给我返回1000,说明第一次初始化结束  10 00 00 00
+                    btn_con!!.isClickable = true
+                    msg.arg1 = 0xa
+                    tableStatus = TableStatus.S_0000
                 }
 
                 handler.sendMessage(msg)
@@ -270,24 +268,23 @@ class MainActivity : AppCompatActivity() {
         });
     }
 
-
     //循环发送消息
     fun sendRound() {
         Thread(Runnable {
             while (true) {
-                if (bfWriter!=null&&allowSculpture&&allowSendMessage) {//bfWrite不为空，连接成功，是否可以继续发送指令，是否能发指令（按钮点击之后才发指令）
-                    if(tableStatus==TableStatus.S_1000){//如果是第一次就会触发这个方法，一直到机器人返回0000的时候
+                if (bfWriter != null && allowSculpture && allowSendMessage) {//bfWrite不为空，连接成功，是否可以继续发送指令，是否能发指令（按钮点击之后才发指令）
+                    if (tableStatus == TableStatus.S_1000) {//如果是第一次就会触发这个方法，一直到机器人返回0000的时候
                         sendOption(b_1000!!, bfWriter!!)
-                    }else{
+                    } else {
                         sendOption(b_0000!!, bfWriter!!)
                     }
 //                        sendOption(b_1000!!, bfWriter!!)
-                        val msg=Message()
-                        msg.arg1=0xa
-                        handler.sendMessage(msg)
+                    val msg = Message()
+                    msg.arg1 = 0xa
+                    handler.sendMessage(msg)
                 } else {
-                    val msg=Message()
-                    msg.arg1=0xd
+                    val msg = Message()
+                    msg.arg1 = 0xd
                 }
                 Thread.sleep(2000)
             }
@@ -306,24 +303,43 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     //机器人按钮设置文字
-    private fun btnSetText(text:String){
-        btn_con!!.text=text
+    private fun btnSetText(text: String) {
+        btn_con!!.text = text
     }
 
-    private var handler=object :Handler(){
+    private var handler = object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            when(msg.arg1){
-                0xA->btnSetText("正在雕刻")
-//                0xB->btnSetText("已停止雕刻")
-                0xc->{
-                    btnSetText("点击雕刻")
-                    FinalValue.toast(this@MainActivity,"已完成雕刻")
+            when (msg.arg1) {
+                0xA -> {
+                    btnSetText("正在雕刻")
+                    sendButtonSetBackground(BtnStatus.Sculpture)
                 }
-                0xd->btnSetText("未连接机器人")
-                0xe->btnSetText("点击雕刻")
+//                0xB->btnSetText("已停止雕刻")
+                0xc -> {
+                    btnSetText("点击雕刻")
+                    FinalValue.toast(this@MainActivity, "已完成雕刻")
+                    sendButtonSetBackground(BtnStatus.Already)
+                }
+                0xd -> {
+                    btnSetText("未连接机器人")
+                    sendButtonSetBackground(BtnStatus.NoNet)
+                }
+                0xe -> {
+                    btnSetText("点击雕刻")
+                    sendButtonSetBackground(BtnStatus.Already)
+                }
             }
+        }
+    }
+
+    private fun sendButtonSetBackground(status: BtnStatus) {
+        when (status) {
+            BtnStatus.NoNet -> btn_con!!.background = resources.getDrawable(R.drawable.btn_shape_noconnect)
+            BtnStatus.Already -> btn_con!!.background = resources.getDrawable(R.drawable.btn_shape_normal)
+            BtnStatus.Sculpture -> btn_con!!.background = resources.getDrawable(R.drawable.btn_shape_pressed)
         }
     }
 }

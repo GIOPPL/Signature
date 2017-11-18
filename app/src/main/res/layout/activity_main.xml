@@ -80,7 +80,7 @@
                     android:id="@+id/btn_con"
                     android:layout_width="100dp"
                     android:layout_height="60dp"
-                    android:background="@drawable/btn"
+                    android:background="@drawable/btn_shape_noconnect"
                     android:onClick="conRobot"
                     android:text="未连接"
                     android:textSize="25sp" />

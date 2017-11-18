@@ -11,10 +11,11 @@ import android.widget.Toast
 class FinalValue {
 
     companion object {
+        internal var BITMAP_SIZE = 300
         internal var IMAGE_NAME_INCREMENT = 0
         internal var SERVER_ADDRESS="http://60.169.65.79:1004"
         internal var SERVER_PORT="/sign/main?method=efort"
-        internal var SERVER_ROBOT="192.168.0.101"
+        internal var SERVER_ROBOT="192.168.0.100"
         internal var ROBOT_PORT=8088
         public fun toast(context: Context, msg: String = context.packageName) {
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()

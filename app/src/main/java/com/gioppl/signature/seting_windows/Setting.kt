@@ -19,6 +19,8 @@ class Setting: AppCompatActivity() {
     private var btn_cmpIntro:Button?=null
     private var ed_server:EditText?=null
     private var ed_robot:EditText?=null
+    private var ed_size:EditText?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setting)
@@ -30,6 +32,7 @@ class Setting: AppCompatActivity() {
     private fun serverShow() {
         ed_robot!!.hint = FinalValue.SERVER_ROBOT
         ed_server!!.hint=FinalValue.SERVER_ADDRESS
+        ed_size!!.hint=FinalValue.BITMAP_SIZE.toString()
     }
 
     private fun initView() {
@@ -39,6 +42,8 @@ class Setting: AppCompatActivity() {
         btn_cmpIntro= findViewById(R.id.btn_set_companyIntroduce) as Button?
         ed_server= findViewById(R.id.ed_set_server) as EditText?
         ed_robot= findViewById(R.id.ed_set_robot) as EditText?
+        ed_size= findViewById(R.id.ed_set_size) as EditText?
+        //
     }
     public fun netSet(view: View?){
         btn_net!!.setBackgroundColor(Color.parseColor("#4CA1FF"))
@@ -73,5 +78,15 @@ class Setting: AppCompatActivity() {
     }
     public fun back(view: View){
         finish()
+    }
+    public fun updateBitmapSize(view:View){
+        try {
+            FinalValue.BITMAP_SIZE=Integer.parseInt(ed_size!!.text.toString())
+            FinalValue.toast(this@Setting,"修改图片大小成功")
+        }catch (e:Exception){
+            FinalValue.toast(this@Setting,"修改图片大小失败，请用正确数字")
+        }
+
+
     }
 }
