@@ -30,9 +30,9 @@ class Setting: AppCompatActivity() {
     }
 
     private fun serverShow() {
-        ed_robot!!.hint = FinalValue.SERVER_ROBOT
-        ed_server!!.hint=FinalValue.SERVER_ADDRESS
-        ed_size!!.hint=FinalValue.BITMAP_SIZE.toString()
+        ed_robot!!.setText( FinalValue.SERVER_ROBOT)
+        ed_server!!.setText( FinalValue.SERVER_ADDRESS)
+        ed_size!!.setText( FinalValue.BITMAP_SIZE.toString())
     }
 
     private fun initView() {

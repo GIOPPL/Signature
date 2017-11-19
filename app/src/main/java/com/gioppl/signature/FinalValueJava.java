@@ -39,4 +39,14 @@ public class FinalValueJava {
         }
         return res;
     }
+    public static String getB_0010() {
+        byte[] b = {0x0, 0x0, 0x1, 0x0};
+        String res = null;
+        try {
+            res = new String(b, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
 }

@@ -70,6 +70,7 @@ public class SocketUtil {
                     e.printStackTrace();
                     publishProgress("链接建立失败" + "--" + e.toString());
                     Log.e("SocketActivity", e.toString());
+//                    Thread.yield();
                 }
                 return null;
             }
@@ -136,6 +137,7 @@ public class SocketUtil {
      * @return 是否为IP地址
      */
     private boolean isIP(String addr) {
+
         if (addr.length() < 7 || addr.length() > 15 || "".equals(addr)) {
             return false;
         }

@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     var b_1000: String? = null
     var b_0000: String? = null
     var b_0100: String? = null
+    var b_0010: String? = null
 
     private var mList = ArrayList<String>()
 
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         b_0000 = FinalValueJava.getB_0000()
         b_1000 = FinalValueJava.getB_1000()
         b_0100 = FinalValueJava.getB_0100()
+        b_0010 = FinalValueJava.getB_0010()
     }
 
     private fun jurisdictionGet() {
@@ -217,31 +219,34 @@ class MainActivity : AppCompatActivity() {
 
     //定义平板发送的枚举类
     private enum class TableStatus {
-        S_1000, S_0000//总共有两中状态，第一发送1000，第二发送0000
+        S_1000, S_0000,S_0100//总共有两中状态，第一发送1000，第二发送0000,第三个是复位状态
     }
 
     //定义发送按钮的枚举类
     private enum class BtnStatus {
-        NoNet, Already, Sculpture
+        NoNet, Already, Sculpture,Reset
     }
 
     //按钮点击事件
     public fun conRobot(v: View) {
-        allowSculpture = true
-        allowSendMessage = true
-        btn_con!!.isClickable = false
-
-//        robotSate=!robotSate
+        if (netConnectStatus==BtnStatus.NoNet){
+            Thread(Runnable { connect() }).start()//连接机器人
+        }else{
+            allowSculpture = true
+            allowSendMessage = true
+            btn_con!!.isClickable = false
+        }
     }
 
     //连接TCP
     private fun connect() {
         val su = SocketUtil(this, FinalValue.SERVER_ROBOT, FinalValue.ROBOT_PORT, object : SocketUtil.MessageSocket {
-            override fun connectSuccess(bfWriter: BufferedWriter) {
+            override fun connectSuccess(bfWriter: BufferedWriter) {//机器人连接成功
                 isConnectSuccess = true
                 this@MainActivity.bfWriter = bfWriter
                 btnSetText("点击雕刻")
                 sendButtonSetBackground(BtnStatus.Already)
+                netConnectStatus=BtnStatus.Already
             }
 
             override fun backMessage(message: String?) {
@@ -251,18 +256,21 @@ class MainActivity : AppCompatActivity() {
                 if (message == b_0000) {//说明正在雕刻 00 00 00 00
                     btn_con!!.isClickable = false
                     msg.arg1 = 0xa
-                    tableStatus = TableStatus.S_0000
-                } else if (message == b_0100) {//说明雕刻结束 00 10 00 00
-                    btn_con!!.isClickable = true
-                    msg.arg1 = 0xc
                     tableStatus = TableStatus.S_1000
-                    allowSculpture = false
                 } else if (message == b_1000) {//第一次如果给我返回1000,说明第一次初始化结束  10 00 00 00
                     btn_con!!.isClickable = true
                     msg.arg1 = 0xa
                     tableStatus = TableStatus.S_0000
+                } else if(message==b_0100){//雕刻完成，没有复位
+                    btn_con!!.isClickable = false
+                    msg.arg1=0xf
+                    tableStatus = TableStatus.S_0100
+                }else if (message == b_0010) {//复位完成
+                    btn_con!!.isClickable = true
+                    msg.arg1 = 0xc
+                    tableStatus = TableStatus.S_1000
+                    allowSculpture = false
                 }
-
                 handler.sendMessage(msg)
             }
         });
@@ -273,20 +281,26 @@ class MainActivity : AppCompatActivity() {
         Thread(Runnable {
             while (true) {
                 if (bfWriter != null && allowSculpture && allowSendMessage) {//bfWrite不为空，连接成功，是否可以继续发送指令，是否能发指令（按钮点击之后才发指令）
+                    val msg = Message()
                     if (tableStatus == TableStatus.S_1000) {//如果是第一次就会触发这个方法，一直到机器人返回0000的时候
                         sendOption(b_1000!!, bfWriter!!)
-                    } else {
+                        msg.arg1 = 0xa
+                    } else if (tableStatus==TableStatus.S_0000){
                         sendOption(b_0000!!, bfWriter!!)
+                        msg.arg1 = 0xa
+                    }else if(tableStatus==TableStatus.S_0100){
+                        sendOption(b_0100!!, bfWriter!!)
+                        msg.arg1 = 0xf
                     }
 //                        sendOption(b_1000!!, bfWriter!!)
-                    val msg = Message()
-                    msg.arg1 = 0xa
+
+
                     handler.sendMessage(msg)
                 } else {
                     val msg = Message()
                     msg.arg1 = 0xd
                 }
-                Thread.sleep(2000)
+                Thread.sleep(1000)
             }
         }).start()
     }
@@ -331,6 +345,10 @@ class MainActivity : AppCompatActivity() {
                     btnSetText("点击雕刻")
                     sendButtonSetBackground(BtnStatus.Already)
                 }
+                0xf -> {//这个状态是复位
+                    btnSetText("正在复位")
+                    sendButtonSetBackground(BtnStatus.Reset)
+                }
             }
         }
     }
@@ -340,6 +358,7 @@ class MainActivity : AppCompatActivity() {
             BtnStatus.NoNet -> btn_con!!.background = resources.getDrawable(R.drawable.btn_shape_noconnect)
             BtnStatus.Already -> btn_con!!.background = resources.getDrawable(R.drawable.btn_shape_normal)
             BtnStatus.Sculpture -> btn_con!!.background = resources.getDrawable(R.drawable.btn_shape_pressed)
+            BtnStatus.Reset -> btn_con!!.background = resources.getDrawable(R.drawable.btn_shape_pressed)
         }
     }
 }
