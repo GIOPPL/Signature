@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 圆角 -->
-    <corners
-        android:radius="15dp"/><!-- 设置圆角半径 -->
-    <!-- 渐变 -->
-    <gradient
-        android:startColor="#db85f1"
-        android:centerColor="#de71f9"
-        android:endColor="#de71f9"
-        android:useLevel="true"
-        android:angle="45"
-        android:type="radial"
-        android:centerX="0"
-        android:centerY="0"
-        android:gradientRadius="90"/>
-      <!--android:centerColor="#edc820"-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="#3fffffff"/>
+    <size android:width="5dp"
+        android:height="5dp"/>
 </shape>

@@ -3,14 +3,6 @@ package com.gioppl.signature
 import android.graphics.*
 
 
-
-
-
-
-
-
-
-
 /**
  * Created by GIOPPL on 2017/11/1.
  */
@@ -50,9 +42,9 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
 
         try {
             val newBmp = Bitmap.createBitmap(bitmap, col_count_left, row_count_left, width!! - col_count_left - 1 - col_count_right, height!! - row_count_left - 1 - row_count_right, null, false)
-            drawFixationSizeBitmap(newBmp,FinalValue.BITMAP_SIZE)
+//            drawFixationSizeBitmap(newBmp,FinalValue.BITMAP_SIZE)
+            drawFixationSizeBitmap(bitmap,FinalValue.BITMAP_SIZE)
             drawBitmapToBitmap(newBmp)
-//            drawServerBitmap(newBmp)
         }catch (e:Exception){
                 FinalValue.errorMessage(e.toString())
         }
@@ -62,7 +54,7 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
         bitmap_blank.eraseColor(Color.parseColor("#ffffff"))//填充颜色
         val canvas = Canvas(bitmap_blank)
         canvas.drawBitmap(frontBitmap, calculateWidth(frontBitmap.width.toFloat()), calculateHeight(frontBitmap.height.toFloat()), null);
-        splitBmpOption.SaveBitmap(bitmap_blank)
+//        splitBmpOption.SaveBitmap(bitmap_blank)
     }
 
     //画固定尺寸的bitmap
@@ -78,16 +70,30 @@ class BmpOption(var bitmap: Bitmap, var splitBmpOption: SplitBmpOption) {
 //        matrix.postScale(0.2f, 0.2f)
 //        val temp = Bitmap.createBitmap(bgImage, 0, 0, bgImage.width, bgImage.height, matrix, true)
         var newBmp=bgImage;
-        while (newBmp.width >=newWidth){
-            val matrix = Matrix()
-            matrix.postScale(0.9f, 0.9f)
-            newBmp = Bitmap.createBitmap(newBmp, 0, 0, newBmp.width, newBmp.height, matrix, true)
-        }
-
-//        splitBmpOption.SaveBitmap(newBmp)
-        splitBmpOption.ServerBitmap(newBmp)
+//        while (newBmp.width >=newWidth){
+//            val matrix = Matrix()
+//            matrix.postScale(0.9f, 0.9f)
+//            matrix.setScale(1.3f, 1.3f,(newBmp.width/2).toFloat(), (newBmp.height/2).toFloat());
+//            matrix.postScale(0.2f, 0.2f, (newBmp.width/2).toFloat(), (newBmp.height/2).toFloat())
+//            val bd = BitmapDrawable(newBmp)//接收bitmap
+//            bd.setAntiAlias(true)//消除锯齿
+//            newBmp = Bitmap.createBitmap(newBmp, 0, 0, newBmp.width, newBmp.height, matrix, true)
+//        }
+//        while(newBmp.width>FinalValue.BITMAP_WEIGHT||newBmp.height>FinalValue.BITMAP_HEIGHT){
+//            val matrix = Matrix()
+//            matrix.postScale(0.95f, 0.95f)
+//            matrix.setScale(0.95f, 0.95f,(newBmp.width/2).toFloat(), (newBmp.height/2).toFloat());
+//            newBmp = Bitmap.createBitmap(newBmp, 0, 0, newBmp.width, newBmp.height, matrix, true)
+//        }
+        println("bitmap的长："+newBmp.width+"宽："+newBmp.height)
+//        saveJPG_After(newBmp)
+        splitBmpOption.SaveBitmap(bgImage)
+        splitBmpOption.ServerBitmap(bgImage)
     }
 
+    /**
+     * 镜像文件
+     */
     private fun drawServerBitmap(frontBitmap: Bitmap){
         val final_bitmap=frontBitmap//用于不传镜像文件
         val bitmap_blank = Bitmap.createBitmap(width!!, height!!-100,Bitmap.Config.ARGB_8888)

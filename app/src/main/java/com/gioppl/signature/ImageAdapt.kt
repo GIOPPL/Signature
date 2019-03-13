@@ -32,9 +32,9 @@ class ImageAdapt(private var mContext:Context,private var mList:ArrayList<String
         var tv_imageItem:TextView?=null
         var im_delete:ImageView?=null
         init {
-            sim_imageItem=item.findViewById(R.id.sim_imageItem)
-            tv_imageItem=item.findViewById(R.id.tv_imageItem_name)
-            im_delete=item.findViewById(R.id.im_imageItem_delete)
+            sim_imageItem= item.findViewById(R.id.sim_imageItem) as SimpleDraweeView?
+            tv_imageItem= item.findViewById(R.id.tv_imageItem_name) as TextView?
+            im_delete= item.findViewById(R.id.im_imageItem_delete) as SimpleDraweeView?
         }
     }
     private fun split(path:String):String{

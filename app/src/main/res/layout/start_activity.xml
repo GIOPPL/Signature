@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:pv="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/bg5"
+    android:orientation="vertical">
+    <me.wangyuwei.particleview.ParticleView
+        android:id="@+id/pv_start"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        pv:pv_background_color="#2A5B7C"
+        pv:pv_host_text="中国移动"
+        pv:pv_host_text_size="30sp"
+        pv:pv_particle_text="5G"
+        pv:pv_particle_text_size="30sp"
+        pv:pv_text_color="#FFF"
+        pv:pv_text_anim_time="1000"
+        pv:pv_spread_anim_time="1000"
+        pv:pv_host_text_anim_time="1000" />
+</LinearLayout>

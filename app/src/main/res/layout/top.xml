@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="66dp"
-    android:background="@mipmap/back1"
+    android:layout_height="70dp"
+    android:background="#af2A5B7C"
     android:orientation="vertical">
-
+    <!--android:background="@mipmap/back1"-->
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
         android:src="@mipmap/china_mobile" />
 
     <TextView
@@ -15,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="签名录入系统"
+        android:text="      5G智能制造演示系统 \n 5G Smart Manufacturing Demo"
         android:textColor="#ffffff"
         android:textSize="28sp"
         android:textStyle="bold" />

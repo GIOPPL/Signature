@@ -12,7 +12,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.OrientationHelper
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import com.gioppl.signature.seting_windows.Setting
 import com.gioppl.signature.tcp.SocketUtil
@@ -31,12 +34,15 @@ class MainActivity : AppCompatActivity() {
     var b_0000: String? = null
     var b_0100: String? = null
     var b_0010: String? = null
+    var im_connection:ImageView?=null
+    var tv_english:TextView?=null
 
     private var mList = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         jurisdictionGet()
         Thread(Runnable { connect() }).start()//连接机器人
         findImage()
@@ -75,9 +81,11 @@ class MainActivity : AppCompatActivity() {
      * 初始化一般控件
      */
     private fun initView() {
+        im_connection= findViewById(R.id.im_main_connection) as ImageView?
         dView = findViewById(R.id.dView_main) as DoodleView?
         mRV = findViewById(R.id.rv_mian) as RecyclerView?
         btn_con = findViewById(R.id.btn_con) as Button?
+        tv_english= findViewById(R.id.tv_con_english) as TextView?
     }
 
     /**
@@ -148,29 +156,30 @@ class MainActivity : AppCompatActivity() {
         BmpOption(bitmap, object : BmpOption.SplitBmpOption {
 
             override fun ServerBitmap(serverBitmap: Bitmap) {
-                //保存上传到服务器的图片
-                ImageOption(serverBitmap, this@MainActivity, object : ImageOption.SaveImageSuccess {
-                    override fun success(path: String) {
-                        imagePath = path
-                    }
-                }, true)
+                ImageOption(null,null,null,false).saveJPG_After(serverBitmap)//保存图片
+                //                //保存上传到服务器的图片
+//                ImageOption(serverBitmap, this@MainActivity, object : ImageOption.SaveImageSuccess {
+//                    override fun success(path: String) {
+//                        imagePath = path
+//                    }
+//                }, true)
             }
 
             override fun SaveBitmap(saveBitmap: Bitmap) {
                 //保存画廊里要存的图片
-                ImageOption(saveBitmap, this@MainActivity, object : ImageOption.SaveImageSuccess {
-                    override fun success(path: String) {
-                        mList.add(0, path)
-                        mAdapt!!.notifyDataSetChanged()
-                    }
-                }, false)
+//                ImageOption(saveBitmap, this@MainActivity, object : ImageOption.SaveImageSuccess {
+//                    override fun success(path: String) {
+//                        mList.add(0, path)
+//                        mAdapt!!.notifyDataSetChanged()
+//                    }
+//                }, false)
             }
         })
 
         dView!!.isDrawingCacheEnabled = false  //禁用DrawingCache否则会影响性能
 
         dView!!.clearCaves()
-
+        imagePath=Environment.getExternalStorageDirectory().absolutePath + "/GIOPPL/Server/"+ "serve.jpg"
         //上传图片
         if (imagePath != null) {
             FinalValue.successMessage(imagePath + ",")
@@ -182,7 +191,7 @@ class MainActivity : AppCompatActivity() {
                 override fun uploadImageSuccessful() {//上传成功的回调方法
                     FinalValue.toast(this@MainActivity, "上传成功!")
                     btn_con!!.visibility = View.VISIBLE
-                    FinalValue.successMessage("图片上传成功哦！！！！")
+                    FinalValue.successMessage("图片上传成功哦！")
                 }
             })
         }
@@ -245,8 +254,12 @@ class MainActivity : AppCompatActivity() {
                 isConnectSuccess = true
                 this@MainActivity.bfWriter = bfWriter
                 btnSetText("点击雕刻")
+                btnSetEnglishText("Start",20.0f);
                 sendButtonSetBackground(BtnStatus.Already)
                 netConnectStatus=BtnStatus.Already
+                val msg = Message()
+                msg.arg1 = 0x10
+                handler.sendMessage(msg)
             }
 
             override fun backMessage(message: String?) {
@@ -322,32 +335,51 @@ class MainActivity : AppCompatActivity() {
     private fun btnSetText(text: String) {
         btn_con!!.text = text
     }
+    //机器人按钮设置文字
+    private fun btnSetEnglishText(text: String,textSize:Float) {
+        tv_english!!.text = text
+//        tv_english!!.textSize=textSize
+    }
 
     private var handler = object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
+
             when (msg.arg1) {
                 0xA -> {
                     btnSetText("正在雕刻")
+                    btnSetEnglishText("Ongoing",20.0f);//ONGOING
                     sendButtonSetBackground(BtnStatus.Sculpture)
+                    im_connection!!.setImageResource(R.mipmap.circle_btn)
                 }
 //                0xB->btnSetText("已停止雕刻")
                 0xc -> {
                     btnSetText("点击雕刻")
+                    btnSetEnglishText("Start",20.0f);//START
                     FinalValue.toast(this@MainActivity, "已完成雕刻")
                     sendButtonSetBackground(BtnStatus.Already)
+                    im_connection!!.setImageResource(R.mipmap.circle_btn)
                 }
                 0xd -> {
-                    btnSetText("未连接机器人")
+                    btnSetText("未连接")
+                    btnSetEnglishText("Unconnected",13.0f);//CONNECTION
                     sendButtonSetBackground(BtnStatus.NoNet)
+                    im_connection!!.setImageResource(R.mipmap.circle_error)
                 }
                 0xe -> {
                     btnSetText("点击雕刻")
+                    btnSetEnglishText("Start",20.0f);//ENGRAVING
                     sendButtonSetBackground(BtnStatus.Already)
+                    im_connection!!.setImageResource(R.mipmap.circle_btn)
                 }
                 0xf -> {//这个状态是复位
                     btnSetText("正在复位")
+                    btnSetEnglishText("Resetting",20.0f);//RESETTING
                     sendButtonSetBackground(BtnStatus.Reset)
+                    im_connection!!.setImageResource(R.mipmap.circle_btn)
+                }
+                0x10->{
+                    im_connection!!.setImageResource(R.mipmap.circle_btn)
                 }
             }
         }

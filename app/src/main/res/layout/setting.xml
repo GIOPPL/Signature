@@ -64,6 +64,9 @@
             <include
                 android:id="@+id/la_set_2"
                 layout="@layout/cop_introduce" />
+            <include
+                android:id="@+id/la_set_2"
+                layout="@layout/cop_introduce" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>

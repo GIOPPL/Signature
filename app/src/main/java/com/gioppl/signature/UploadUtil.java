@@ -43,6 +43,7 @@ public class UploadUtil {
     public void start(File file, String RequestURL, Context context, final UpImageSuccessful upImageSuccessful){
         this.context=context;
         this.upImageSuccessful=upImageSuccessful;
+        FinalValue.Companion.successMessage("上传地址为"+RequestURL);
         String result = null;
         String  BOUNDARY =  UUID.randomUUID().toString();  //边界标识   随机生成
         String PREFIX = "--" , LINE_END = "\r\n";

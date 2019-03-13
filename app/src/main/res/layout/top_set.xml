@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="66dp"
-    android:background="@mipmap/back1"
+    android:background="#0080CC"
     android:orientation="vertical">
 
     <Button
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="EFORT"
+        android:text="      5G智能制造演示系统\n5G Smart Manufacturing Demo"
         android:textColor="#ffffff"
         android:textSize="25sp"
         android:textStyle="bold" />
